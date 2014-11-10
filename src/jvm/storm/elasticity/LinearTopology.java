@@ -10,7 +10,7 @@ import backtype.storm.topology.TopologyBuilder;
 public class LinearTopology {
 	public static void main(String[] args) throws Exception {
 		int numBolt = 3;
-		int paralellism = 2;
+		int paralellism = 3;
 
 		TopologyBuilder builder = new TopologyBuilder();
 
