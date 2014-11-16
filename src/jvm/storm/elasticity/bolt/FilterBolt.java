@@ -24,6 +24,7 @@ public class FilterBolt extends BaseRichBolt{
     @Override
     public void prepare(Map conf, TopologyContext context, OutputCollector collector) {
       _collector = collector;
+      _rand = new Random();
     }
     @Override
     public void execute(Tuple tuple) {
