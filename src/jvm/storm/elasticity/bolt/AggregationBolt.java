@@ -15,7 +15,6 @@ import backtype.storm.tuple.Fields;
 import backtype.storm.tuple.Tuple;
 import backtype.storm.tuple.Values;
 import backtype.storm.utils.Utils;
-import bsh.util.Util;
 
 public class AggregationBolt extends BaseRichBolt{
 	OutputCollector _collector;
@@ -34,7 +33,7 @@ public class AggregationBolt extends BaseRichBolt{
     	word+=Byte.toString(b);
     	word+=Byte.toString(b);
     	word+=Byte.toString(b);
-      _collector.emit(tuple, word);
+      _collector.emit(tuple, new Values(word));
       //_collector.ack(tuple);
     }
 
