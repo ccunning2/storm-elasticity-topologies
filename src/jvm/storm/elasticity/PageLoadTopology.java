@@ -39,7 +39,7 @@ public class PageLoadTopology {
 		builder.setBolt("bolt_join", new TestBolt(), paralellism).shuffleGrouping("bolt_filter");
 		builder.setBolt("bolt_filter_2", new FilterBolt(), paralellism).shuffleGrouping("bolt_join");
 		builder.setBolt("bolt_aggregate", new AggregationBolt(), paralellism).shuffleGrouping("bolt_filter_2");
-		builder.setBolt("bolt_output", new TestBolt(),paralellism).shuffleGrouping("bolt_aggregate");
+		builder.setBolt("bolt_output_sink", new TestBolt(),paralellism).shuffleGrouping("bolt_aggregate");
 
 		Config conf = new Config();
 		conf.setDebug(true);
