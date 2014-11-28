@@ -38,12 +38,12 @@ public class ProcessingTopology {
 		builder.setBolt("bolt_transform", new TransformBolt(), paralellism+2).shuffleGrouping("spout_head");
 		builder.setBolt("bolt_filter", new FilterBolt(), paralellism+2).shuffleGrouping("bolt_transform");
 		builder.setBolt("bolt_join1", new TestBolt(), paralellism+2).shuffleGrouping("bolt_filter");
-		builder.setBolt("bolt_output1", new TestBolt(),paralellism+2).shuffleGrouping("bolt_join1");
+		builder.setBolt("bolt_output_1", new TestBolt(),paralellism+2).shuffleGrouping("bolt_join1");
 		//builder.setBolt("bolt_filter_2", new FilterBolt(), paralellism).shuffleGrouping("bolt_join");
 		//builder.setBolt("bolt_aggregate", new AggregationBolt(), paralellism).shuffleGrouping("bolt_filter_2");
 		builder.setBolt("bolt_join2", new TransformBolt(), paralellism+2).shuffleGrouping("bolt_transform");
 		builder.setBolt("bolt_normalize", new TestBolt(),paralellism+2).shuffleGrouping("bolt_join2");
-		builder.setBolt("bolt_output2", new TestBolt(),paralellism+2).shuffleGrouping("bolt_normalize");
+		builder.setBolt("bolt_output_2", new TestBolt(),paralellism+2).shuffleGrouping("bolt_normalize");
 
 		Config conf = new Config();
 		conf.setDebug(true);
