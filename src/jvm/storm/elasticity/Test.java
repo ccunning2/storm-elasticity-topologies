@@ -52,6 +52,7 @@ public class Test {
 		conf.setDebug(true);
 
 		conf.setNumWorkers(2);
+		conf.setNumAckers(0);
 
 		StormSubmitter.submitTopologyWithProgressBar(args[0], conf,
 				builder.createTopology());
