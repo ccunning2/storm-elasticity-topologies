@@ -16,24 +16,9 @@ public class PageLoadTopology {
 
 		TopologyBuilder builder = new TopologyBuilder();
 
-		builder.setSpout("spout_head", new RandomLogSpout(), paralellism);
+		builder.setSpout("spout_head", new RandomLogSpout(), paralellism).setNumTasks(10);
 
-		/*for (int i = 0; i < numBolt; i++) {
-			if (i == 0) {
-				builder.setBolt("bolt_linear_" + i, new TestBolt(), paralellism)
-						.shuffleGrouping("spout_head");
-			} else {
-				if (i == (numBolt - 1)) {
-					builder.setBolt("bolt_output_" + i, new TestBolt(),
-							paralellism).shuffleGrouping(
-							"bolt_linear_" + (i - 1));
-				} else {
-					builder.setBolt("bolt_linear_" + i, new TestBolt(),
-							paralellism).shuffleGrouping(
-							"bolt_linear_" + (i - 1));
-				}
-			}
-		}*/
+
 		builder.setBolt("bolt_transform", new TransformBolt(), paralellism).shuffleGrouping("spout_head").setNumTasks(10);
 		builder.setBolt("bolt_filter", new FilterBolt(), paralellism).shuffleGrouping("bolt_transform").setNumTasks(10);
 		builder.setBolt("bolt_join", new TestBolt(), paralellism).shuffleGrouping("bolt_filter").setNumTasks(10);
