@@ -9,7 +9,7 @@ import backtype.storm.topology.TopologyBuilder;
 
 public class DiamondTopology {
 	public static void main(String[] args) throws Exception {
-		int paralellism = 2;
+		int paralellism = 4;
 
         TopologyBuilder builder = new TopologyBuilder();
 
