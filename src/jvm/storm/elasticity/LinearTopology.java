@@ -34,11 +34,12 @@ public class LinearTopology {
 		}
 
 		Config conf = new Config();
-		conf.setDebug(true);
+		conf.setDebug(false);
+		conf.put(Config.TOPOLOGY_DEBUG, false);
 
 		conf.setNumAckers(0);
 
-		conf.setNumWorkers(12);
+		conf.setNumWorkers(4);
 
 		StormSubmitter.submitTopologyWithProgressBar(args[0], conf,
 				builder.createTopology());
