@@ -11,7 +11,7 @@ public class StarTopology {
 	public static void main(String[] args) throws Exception {
 		int numSpout = 2;
 		int numBolt = 2;
-		int paralellism = 2;
+		int paralellism = 4;
 
 		TopologyBuilder builder = new TopologyBuilder();
 
@@ -30,11 +30,12 @@ public class StarTopology {
 		
 		
 		Config conf = new Config();
-		conf.setDebug(true);
+		conf.setDebug(false);
+		conf.put(Config.TOPOLOGY_DEBUG, false);
 		
 		conf.setNumAckers(0);
 
-		conf.setNumWorkers(12);
+		conf.setNumWorkers(4);
 		
 	
 
