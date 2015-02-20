@@ -16,7 +16,7 @@ public class StarTopology {
 		TopologyBuilder builder = new TopologyBuilder();
 
 		BoltDeclarer center = builder.setBolt("center", new TestBolt(),
-				paralellism*2);
+				paralellism*4);
 
 		for (int i = 0; i < numSpout; i++) {
 			builder.setSpout("spout_" + i, new TestSpout(), paralellism);
