@@ -16,7 +16,7 @@ public class StarTopology {
 		TopologyBuilder builder = new TopologyBuilder();
 
 		BoltDeclarer center = builder.setBolt("center", new TestBolt(),
-				paralellism*4);
+				paralellism*6);
 
 		for (int i = 0; i < numSpout; i++) {
 			builder.setSpout("spout_" + i, new TestSpout(), paralellism);
@@ -24,7 +24,7 @@ public class StarTopology {
 		}
 
 		for (int i = 0; i < numBolt; i++) {
-			builder.setBolt("bolt_output_" + i, new TestBolt(), paralellism)
+			builder.setBolt("bolt_output_" + i, new TestBolt(), paralellism*2)
 					.shuffleGrouping("center");
 		}
 		
