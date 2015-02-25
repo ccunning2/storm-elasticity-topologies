@@ -20,6 +20,7 @@ public class TestSpout extends BaseRichSpout {
 
 	  @Override
 	  public void nextTuple() {
+		  Utils.sleep(100);
 	    _collector.emit(new Values("jerry"));
 	  }
 
