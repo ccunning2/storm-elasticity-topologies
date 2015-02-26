@@ -12,13 +12,13 @@ public class test1 {
 
 		TopologyBuilder builder = new TopologyBuilder();
 
-		builder.setSpout("spout_head_1", new TestSpout(), 2);
+		builder.setSpout("spout_head_1", new TestSpout(), 8);
 		builder.setBolt("bolt_linear_2", new TestBolt(), 8)
 		.shuffleGrouping("spout_head_1");
 		builder.setBolt("bolt_output_3", new TestBolt(), 8)
 		.shuffleGrouping("bolt_linear_2");
 		
-		builder.setSpout("spout_head_2", new TestSpout(), 2);
+		builder.setSpout("spout_head_2", new TestSpout(), 8);
 		builder.setBolt("bolt_linear_3", new TestBolt(), 8)
 		.shuffleGrouping("spout_head_2");
 		builder.setBolt("bolt_output_4", new TestBolt(), 8)
