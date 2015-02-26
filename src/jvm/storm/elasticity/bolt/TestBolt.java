@@ -26,7 +26,7 @@ public class TestBolt extends BaseRichBolt{
     }
     @Override
     public void execute(Tuple tuple) {
-    	 BusyWork.doWork(1000);
+    	 BusyWork.doWork(10000);
       _collector.emit(tuple, new Values(tuple.getString(0)));
       //_collector.ack(tuple);
     }

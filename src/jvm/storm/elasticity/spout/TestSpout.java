@@ -21,7 +21,7 @@ public class TestSpout extends BaseRichSpout {
 
 	  @Override
 	  public void nextTuple() {
-		 BusyWork.doWork(1000);
+		 BusyWork.doWork(10000);
 	    _collector.emit(new Values("jerry"));
 	  }
 
