@@ -3,6 +3,7 @@ package storm.elasticity.spout;
 import java.util.Map;
 import java.util.Random;
 
+import storm.elasticity.BusyWork.BusyWork;
 import backtype.storm.spout.SpoutOutputCollector;
 import backtype.storm.task.TopologyContext;
 import backtype.storm.topology.OutputFieldsDeclarer;
@@ -20,7 +21,7 @@ public class TestSpout extends BaseRichSpout {
 
 	  @Override
 	  public void nextTuple() {
-		  Utils.sleep(1);
+		 BusyWork.doWork(1000);
 	    _collector.emit(new Values("jerry"));
 	  }
 
