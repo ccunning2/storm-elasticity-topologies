@@ -11,12 +11,12 @@ public class StarTopology {
 	public static void main(String[] args) throws Exception {
 		int numSpout = 2;
 		int numBolt = 2;
-		int paralellism = 2;
+		int paralellism = 10;
 
 		TopologyBuilder builder = new TopologyBuilder();
 
 		BoltDeclarer center = builder.setBolt("center", new TestBolt(),
-				paralellism*6);
+				paralellism*2);
 
 		for (int i = 0; i < numSpout; i++) {
 			builder.setSpout("spout_" + i, new TestSpout(), paralellism);
