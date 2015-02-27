@@ -10,7 +10,7 @@ import backtype.storm.topology.TopologyBuilder;
 public class LinearTopology {
 	public static void main(String[] args) throws Exception {
 		int numBolt = 3;
-		int paralellism = 6;
+		int paralellism = 16;
 
 		TopologyBuilder builder = new TopologyBuilder();
 
@@ -39,7 +39,7 @@ public class LinearTopology {
 
 		conf.setNumAckers(0);
 
-		conf.setNumWorkers(4);
+		conf.setNumWorkers(16);
 
 		StormSubmitter.submitTopologyWithProgressBar(args[0], conf,
 				builder.createTopology());
