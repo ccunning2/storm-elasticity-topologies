@@ -9,18 +9,18 @@ import backtype.storm.topology.TopologyBuilder;
 
 public class DiamondTopology {
 	public static void main(String[] args) throws Exception {
-		int paralellism = 6;
+		//int paralellism = 15;
 
         TopologyBuilder builder = new TopologyBuilder();
 
-        builder.setSpout("spout_head", new TestSpout(), paralellism).setNumTasks(4);
+        builder.setSpout("spout_head", new TestSpout(), 10).setNumTasks(4);
 
-        builder.setBolt("bolt_1", new TestBolt(), paralellism).setNumTasks(12).shuffleGrouping("spout_head");
-        builder.setBolt("bolt_2", new TestBolt(), paralellism).setNumTasks(12).shuffleGrouping("spout_head");
-        builder.setBolt("bolt_3", new TestBolt(), paralellism).setNumTasks(12).shuffleGrouping("spout_head");
-        builder.setBolt("bolt_4", new TestBolt(), paralellism).setNumTasks(12).shuffleGrouping("spout_head");
+        builder.setBolt("bolt_1", new TestBolt(), 5).setNumTasks(12).shuffleGrouping("spout_head");
+        builder.setBolt("bolt_2", new TestBolt(), 5).setNumTasks(12).shuffleGrouping("spout_head");
+        builder.setBolt("bolt_3", new TestBolt(), 5).setNumTasks(12).shuffleGrouping("spout_head");
+        builder.setBolt("bolt_4", new TestBolt(), 5).setNumTasks(12).shuffleGrouping("spout_head");
 
-        BoltDeclarer output = builder.setBolt("bolt_output_3", new TestBolt(), paralellism).setNumTasks(12);
+        BoltDeclarer output = builder.setBolt("bolt_output_3", new TestBolt(), 20).setNumTasks(12);
         output.shuffleGrouping("bolt_1");
         output.shuffleGrouping("bolt_2");
         output.shuffleGrouping("bolt_3");
