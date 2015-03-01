@@ -13,14 +13,20 @@ public class DiamondTopology {
 
         TopologyBuilder builder = new TopologyBuilder();
 
-        builder.setSpout("spout_head", new TestSpout(), 10).setNumTasks(4);
+        //builder.setSpout("spout_head", new TestSpout(), 10).setNumTasks(4);
+        builder.setSpout("spout_head", new TestSpout(), 10);
 
-        builder.setBolt("bolt_1", new TestBolt(), 5).setNumTasks(12).shuffleGrouping("spout_head");
-        builder.setBolt("bolt_2", new TestBolt(), 5).setNumTasks(12).shuffleGrouping("spout_head");
-        builder.setBolt("bolt_3", new TestBolt(), 5).setNumTasks(12).shuffleGrouping("spout_head");
-        builder.setBolt("bolt_4", new TestBolt(), 5).setNumTasks(12).shuffleGrouping("spout_head");
+//        builder.setBolt("bolt_1", new TestBolt(), 5).setNumTasks(12).shuffleGrouping("spout_head");
+//        builder.setBolt("bolt_2", new TestBolt(), 5).setNumTasks(12).shuffleGrouping("spout_head");
+//        builder.setBolt("bolt_3", new TestBolt(), 5).setNumTasks(12).shuffleGrouping("spout_head");
+//        builder.setBolt("bolt_4", new TestBolt(), 5).setNumTasks(12).shuffleGrouping("spout_head");
+        builder.setBolt("bolt_1", new TestBolt(), 5).shuffleGrouping("spout_head");
+	    builder.setBolt("bolt_2", new TestBolt(), 5).shuffleGrouping("spout_head");
+	    builder.setBolt("bolt_3", new TestBolt(), 5).shuffleGrouping("spout_head");
+	    builder.setBolt("bolt_4", new TestBolt(), 5).shuffleGrouping("spout_head");
 
-        BoltDeclarer output = builder.setBolt("bolt_output_3", new TestBolt(), 20).setNumTasks(12);
+        //BoltDeclarer output = builder.setBolt("bolt_output_3", new TestBolt(), 20).setNumTasks(12);
+	    BoltDeclarer output = builder.setBolt("bolt_output_3", new TestBolt(), 20);
         output.shuffleGrouping("bolt_1");
         output.shuffleGrouping("bolt_2");
         output.shuffleGrouping("bolt_3");
