@@ -33,7 +33,8 @@ public class DiamondTopology {
         output.shuffleGrouping("bolt_4");
 
         Config conf = new Config();
-        conf.setDebug(true);
+        conf.setDebug(false);
+		conf.put(Config.TOPOLOGY_DEBUG, false);
 
          conf.setNumAckers(0);
 
