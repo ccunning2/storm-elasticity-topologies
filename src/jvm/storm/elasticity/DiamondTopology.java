@@ -38,7 +38,7 @@ public class DiamondTopology {
 
          conf.setNumAckers(0);
 
-        conf.setNumWorkers(12);
+        conf.setNumWorkers(16);
 
         StormSubmitter.submitTopologyWithProgressBar(args[0], conf,
                         builder.createTopology());
