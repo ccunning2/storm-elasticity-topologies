@@ -22,7 +22,9 @@ public class TestSpout extends BaseRichSpout {
 	  @Override
 	  public void nextTuple() {
 		 BusyWork.doWork(10000);
-	    _collector.emit(new Values("jerry"));
+		 Random randomGenerator = new Random();
+    	 Integer randomInt = randomGenerator.nextInt(1000000000);
+	    _collector.emit(new Values("jerry"), randomInt);
 	  }
 
 	  @Override

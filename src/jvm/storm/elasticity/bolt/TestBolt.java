@@ -1,6 +1,7 @@
 package storm.elasticity.bolt;
 
 import java.util.Map;
+import java.util.Random;
 
 import storm.elasticity.BusyWork.BusyWork;
 import storm.elasticity.ExclamationTopology.ExclamationBolt;
@@ -27,8 +28,9 @@ public class TestBolt extends BaseRichBolt{
     @Override
     public void execute(Tuple tuple) {
     	 BusyWork.doWork(10000);
+    	 
       _collector.emit(tuple, new Values(tuple.getString(0)));
-      //_collector.ack(tuple);
+      _collector.ack(tuple);
     }
 
     @Override
