@@ -14,20 +14,20 @@ public class LinearTopology {
 
 		TopologyBuilder builder = new TopologyBuilder();
 
-		builder.setSpout("spout_head", new TestSpout(), paralellism/1.5);
+		builder.setSpout("spout_head", new TestSpout(), 10);
 
 		for (int i = 0; i < numBolt; i++) {
 			if (i == 0) {
-				builder.setBolt("bolt_linear_" + i, new TestBolt(), paralellism)
+				builder.setBolt("bolt_linear_" + i, new TestBolt(), 20)
 						.shuffleGrouping("spout_head");
 			} else {
 				if (i == (numBolt - 1)) {
 					builder.setBolt("bolt_output_" + i, new TestBolt(),
-							paralellism).shuffleGrouping(
+							20).shuffleGrouping(
 							"bolt_linear_" + (i - 1));
 				} else {
 					builder.setBolt("bolt_linear_" + i, new TestBolt(),
-							paralellism).shuffleGrouping(
+							20).shuffleGrouping(
 							"bolt_linear_" + (i - 1));
 				}
 			}
@@ -37,7 +37,7 @@ public class LinearTopology {
 		conf.setDebug(false);
 		conf.put(Config.TOPOLOGY_DEBUG, false);
 
-		conf.setNumAckers(0);
+		//conf.setNumAckers(0);
 
 		conf.setNumWorkers(16);
 
