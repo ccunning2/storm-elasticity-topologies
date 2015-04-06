@@ -14,7 +14,7 @@ public class LinearTopology {
 
 		TopologyBuilder builder = new TopologyBuilder();
 
-		builder.setSpout("spout_head", new TestSpout(), 10);
+		builder.setSpout("spout_head", new TestSpout(), 20);
 
 		for (int i = 0; i < numBolt; i++) {
 			if (i == 0) {
