@@ -26,7 +26,7 @@ public class PageLoadTopology {
 //		builder.setBolt("bolt_aggregate", new AggregationBolt(), paralellism).shuffleGrouping("bolt_filter_2").setNumTasks(10);
 //		builder.setBolt("bolt_output_sink", new TestBolt(),paralellism).shuffleGrouping("bolt_aggregate").setNumTasks(10);
 		
-		builder.setSpout("spout_head", new RandomLogSpout(), 2*paralellism);
+		builder.setSpout("spout_head", new RandomLogSpout(), paralellism);
 		
 		builder.setBolt("bolt_transform", new TransformBolt(), paralellism).shuffleGrouping("spout_head");
 		builder.setBolt("bolt_filter", new FilterBolt(), paralellism).shuffleGrouping("bolt_transform");
