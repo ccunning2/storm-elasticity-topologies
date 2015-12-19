@@ -1,6 +1,8 @@
 package storm.elasticity;
 
 import backtype.storm.Config;
+import backtype.storm.LocalCluster;
+import backtype.storm.StormSubmitter;
 import backtype.storm.spout.SpoutOutputCollector;
 import backtype.storm.task.OutputCollector;
 import backtype.storm.topology.base.BaseRichSpout;
@@ -46,7 +48,9 @@ public class NetworkMonitoringTopology {
             long unixTime = System.currentTimeMillis() / 1000L;
             String[] sentences = new String[]{"the cow jumped over the moon", "an apple a day keeps the doctor away",
                     "four score and seven years ago", "snow white and the seven dwarfs", "i am at two with nature", "Jerry had good day",
-                    "Hello", "May the force be with you", "Computer Science"};
+                    "Hello", "May the force be with you", "Computer Science", "have a good day", "Jerry Peng", "Le Xu",
+                    "That is what I call a close encounter", "Hells ya", "child please", "three of a kind", "danger danger danger",
+                    "machine learning", "watch a movie"};
             Random rand = new Random();
             String sentence = sentences[rand.nextInt(sentences.length)];
             String[] tags = new String[]{"Success", "Fail"};
@@ -330,24 +334,31 @@ public class NetworkMonitoringTopology {
 
         TopologyBuilder builder = new TopologyBuilder();
 
-        builder.setSpout("spout", new RandomSentenceSpout(), 5);
-        builder.setBolt("parseLines", new ParseLines(), 5).shuffleGrouping("spout");
-        builder.setBolt("filterFailure", new FilterFailure(), 5).shuffleGrouping("parseLines");
-        builder.setBolt("parseFailures", new ParseFailures(), 5).shuffleGrouping("filterFailure");
+        int spoutParallelism = 1;
+        int boltParallelism = 1;
+        builder.setSpout("spout", new RandomSentenceSpout(), spoutParallelism);
+        builder.setBolt("parseLines", new ParseLines(), boltParallelism).shuffleGrouping("spout");
+        builder.setBolt("filterFailure", new FilterFailure(), boltParallelism).shuffleGrouping("parseLines");
+        builder.setBolt("parseFailures", new ParseFailures(), boltParallelism).shuffleGrouping("filterFailure");
         //change id
-        builder.setBolt("aggregate", new Aggregate(), 5).fieldsGrouping("parseFailures", new Fields("id"));
-        builder.setBolt("filter", new Functor(), 5).shuffleGrouping("aggregate");
-        builder.setBolt("functor", new Functor(), 5).shuffleGrouping("filter");
+        builder.setBolt("aggregate", new Aggregate(), boltParallelism).fieldsGrouping("parseFailures", new Fields("id"));
+        builder.setBolt("filter", new Functor(), boltParallelism).shuffleGrouping("aggregate");
+        builder.setBolt("functor", new Functor(), boltParallelism).shuffleGrouping("filter");
 
 
-        builder.setBolt("filterSuccess", new FilterSuccess(), 5).shuffleGrouping("parseLines");
-        builder.setBolt("parseSuccess", new ParseSuccess(), 5).shuffleGrouping("filterSuccess");
+        builder.setBolt("filterSuccess", new FilterSuccess(), boltParallelism).shuffleGrouping("parseLines");
+        builder.setBolt("parseSuccess", new ParseSuccess(), boltParallelism).shuffleGrouping("filterSuccess");
 
-        builder.setBolt("join", new Join(), 5)
+        builder.setBolt("join", new Join(), boltParallelism)
                 .fieldsGrouping("parseSuccess", new Fields("count"))
                 .fieldsGrouping("functor", new Fields("count"));
 
         Config conf = new Config();
         conf.setDebug(true);
+
+
+        conf.setNumWorkers(3);
+
+        StormSubmitter.submitTopologyWithProgressBar(args[0], conf, builder.createTopology());
     }
 }
