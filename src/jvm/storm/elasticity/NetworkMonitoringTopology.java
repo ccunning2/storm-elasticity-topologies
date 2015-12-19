@@ -277,7 +277,6 @@ public class NetworkMonitoringTopology {
         public void execute(Tuple tuple) {
             String word = tuple.getStringByField("sentence");
             Integer length=word.length();
-            Utils.sleep(length);
             word=word.substring(0,(int)(0.8*word.length()));
             _collector.emit(tuple, new Values(word, tuple.getValueByField("count")));
         }
@@ -334,7 +333,7 @@ public class NetworkMonitoringTopology {
         builder.setSpout("spout", new RandomSentenceSpout(), 5);
         builder.setBolt("parseLines", new ParseLines(), 5).shuffleGrouping("spout");
         builder.setBolt("filterFailure", new FilterFailure(), 5).shuffleGrouping("parseLines");
-        builder.setBolt("parseFailures", new ParseFailures(), 5).shuffleGrouping("parseLines");
+        builder.setBolt("parseFailures", new ParseFailures(), 5).shuffleGrouping("filterFailure");
         //change id
         builder.setBolt("aggregate", new Aggregate(), 5).fieldsGrouping("parseFailures", new Fields("id"));
         builder.setBolt("filter", new Functor(), 5).shuffleGrouping("aggregate");
@@ -342,11 +341,11 @@ public class NetworkMonitoringTopology {
 
 
         builder.setBolt("filterSuccess", new FilterSuccess(), 5).shuffleGrouping("parseLines");
-        builder.setBolt("parseSuccess", new ParseSuccess(), 5).shuffleGrouping("parseLines");
+        builder.setBolt("parseSuccess", new ParseSuccess(), 5).shuffleGrouping("filterSuccess");
 
         builder.setBolt("join", new Join(), 5)
                 .fieldsGrouping("parseSuccess", new Fields("count"))
-                .fieldsGrouping("parseFailure", new Fields("count"));
+                .fieldsGrouping("functor", new Fields("count"));
 
         Config conf = new Config();
         conf.setDebug(true);
