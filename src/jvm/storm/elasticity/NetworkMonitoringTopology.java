@@ -29,7 +29,7 @@ public class NetworkMonitoringTopology {
         SpoutOutputCollector _collector;
 
         public void declareOutputFields(OutputFieldsDeclarer outputFieldsDeclarer) {
-
+            outputFieldsDeclarer.declare(new Fields("sentence"));
         }
 
         public void open(Map map, TopologyContext topologyContext, SpoutOutputCollector spoutOutputCollector) {
