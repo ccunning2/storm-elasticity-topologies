@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package storm.starter.spout;
+package storm.elasticity.spout;
 
 import backtype.storm.spout.SpoutOutputCollector;
 import backtype.storm.task.TopologyContext;
@@ -43,7 +43,8 @@ public class RandomSentenceSpout extends BaseRichSpout {
   public void nextTuple() {
     Utils.sleep(100);
     String[] sentences = new String[]{ "the cow jumped over the moon", "an apple a day keeps the doctor away",
-        "four score and seven years ago", "snow white and the seven dwarfs", "i am at two with nature" };
+        "four score and seven years ago", "snow white and the seven dwarfs", "i am at two with nature", "Jerry had good day",
+            "Hello", "May the force be with you", "Computer Science"};
     String sentence = sentences[_rand.nextInt(sentences.length)];
     _collector.emit(new Values(sentence));
   }
@@ -60,5 +61,4 @@ public class RandomSentenceSpout extends BaseRichSpout {
   public void declareOutputFields(OutputFieldsDeclarer declarer) {
     declarer.declare(new Fields("word"));
   }
-
 }

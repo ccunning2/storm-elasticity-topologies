@@ -1,7 +1,6 @@
 package storm.elasticity;
 
 import backtype.storm.Config;
-import backtype.storm.LocalCluster;
 import backtype.storm.StormSubmitter;
 import backtype.storm.spout.SpoutOutputCollector;
 import backtype.storm.task.OutputCollector;
@@ -13,8 +12,6 @@ import backtype.storm.topology.OutputFieldsDeclarer;
 import backtype.storm.topology.TopologyBuilder;
 import backtype.storm.tuple.Fields;
 import backtype.storm.tuple.Tuple;
-import backtype.storm.utils.Utils;
-import storm.elasticity.spout.RandomSentenceSpout;
 import org.json.JSONObject;
 
 import java.util.HashMap;
@@ -28,7 +25,7 @@ import java.util.UUID;
  */
 public class NetworkMonitoringTopology {
 
-    public class NetworkMonitoringTopologySpout extends BaseRichSpout {
+    public static class NetworkMonitoringTopologySpout extends BaseRichSpout {
         SpoutOutputCollector _collector;
 
         public void declareOutputFields(OutputFieldsDeclarer outputFieldsDeclarer) {
@@ -336,7 +333,7 @@ public class NetworkMonitoringTopology {
 
         int spoutParallelism = 1;
         int boltParallelism = 1;
-        builder.setSpout("spout", new RandomSentenceSpout(), spoutParallelism);
+        builder.setSpout("spout", new NetworkMonitoringTopologySpout(), spoutParallelism);
         builder.setBolt("parseLines", new ParseLines(), boltParallelism).shuffleGrouping("spout");
         builder.setBolt("filterFailure", new FilterFailure(), boltParallelism).shuffleGrouping("parseLines");
         builder.setBolt("parseFailures", new ParseFailures(), boltParallelism).shuffleGrouping("filterFailure");
@@ -357,7 +354,7 @@ public class NetworkMonitoringTopology {
         conf.setDebug(true);
 
 
-        conf.setNumWorkers(3);
+        conf.setNumWorkers(1);
 
         StormSubmitter.submitTopologyWithProgressBar(args[0], conf, builder.createTopology());
     }
