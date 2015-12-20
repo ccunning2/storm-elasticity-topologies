@@ -52,8 +52,7 @@ public class NetworkMonitoringTopology {
             String sentence = sentences[rand.nextInt(sentences.length)];
             String[] tags = new String[]{"Success", "Fail"};
             String tag = tags[rand.nextInt(tags.length)];
-            String ret = "{\"id\": \"" + id + "\" ,\"time\": " + unixTime + ", \"sentence\": \"" + sentence + "\", \"tag\": \"" + tag + "\"}";
-
+            String ret = "{\"id\": \"" + id + "\" ,\"time\": \"" + unixTime + "\", \"sentence\": \"" + sentence +"\", \"tag\": \""+ tag +"\"}";
             return ret;
         }
     }
