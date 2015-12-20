@@ -12,6 +12,7 @@ import backtype.storm.topology.OutputFieldsDeclarer;
 import backtype.storm.topology.TopologyBuilder;
 import backtype.storm.tuple.Fields;
 import backtype.storm.tuple.Tuple;
+import backtype.storm.utils.Utils;
 import org.json.JSONObject;
 
 import java.util.HashMap;
@@ -330,30 +331,49 @@ public class NetworkMonitoringTopology {
 
         TopologyBuilder builder = new TopologyBuilder();
 
-        int spoutParallelism = 1;
-        int boltParallelism = 1;
-        builder.setSpout("spout", new NetworkMonitoringTopologySpout(), spoutParallelism);
-        builder.setBolt("parseLines", new ParseLines(), boltParallelism).shuffleGrouping("spout");
-        builder.setBolt("filterFailure", new FilterFailure(), boltParallelism).shuffleGrouping("parseLines");
-        builder.setBolt("parseFailures", new ParseFailures(), boltParallelism).shuffleGrouping("filterFailure");
+        int spoutParallelism = 4;
+        int boltParallelism = 8;
+        int numWorkers = 32;
+
+        builder.setSpout("spout", new NetworkMonitoringTopologySpout(), spoutParallelism)
+                .setNumTasks(spoutParallelism * 2);
+        builder.setBolt("parseLines", new ParseLines(), boltParallelism)
+                .shuffleGrouping("spout")
+                .setNumTasks(boltParallelism * 2);
+        builder.setBolt("filterFailure", new FilterFailure(), boltParallelism)
+                .shuffleGrouping("parseLines")
+                .setNumTasks(boltParallelism * 2);
+        builder.setBolt("parseFailures", new ParseFailures(), boltParallelism)
+                .shuffleGrouping("filterFailure")
+                .setNumTasks(boltParallelism * 2);
         //change id
-        builder.setBolt("aggregate", new Aggregate(), boltParallelism).fieldsGrouping("parseFailures", new Fields("id"));
-        builder.setBolt("filter", new Functor(), boltParallelism).shuffleGrouping("aggregate");
-        builder.setBolt("functor", new Functor(), boltParallelism).shuffleGrouping("filter");
+        builder.setBolt("aggregate", new Aggregate(), boltParallelism)
+                .fieldsGrouping("parseFailures", new Fields("id"))
+                .setNumTasks(boltParallelism * 2);
+        builder.setBolt("filter", new Functor(), boltParallelism)
+                .shuffleGrouping("aggregate")
+                .setNumTasks(boltParallelism * 2);
+        builder.setBolt("functor", new Functor(), boltParallelism)
+                .shuffleGrouping("filter")
+                .setNumTasks(boltParallelism * 2);
 
+        builder.setBolt("filterSuccess", new FilterSuccess(), boltParallelism)
+                .shuffleGrouping("parseLines")
+                .setNumTasks(boltParallelism * 2);
+        builder.setBolt("parseSuccess", new ParseSuccess(), boltParallelism)
+                .shuffleGrouping("filterSuccess")
+                .setNumTasks(boltParallelism * 2);
 
-        builder.setBolt("filterSuccess", new FilterSuccess(), boltParallelism).shuffleGrouping("parseLines");
-        builder.setBolt("parseSuccess", new ParseSuccess(), boltParallelism).shuffleGrouping("filterSuccess");
-
-        builder.setBolt("join", new Join(), boltParallelism)
+        builder.setBolt("join_output_bolt", new Join(), boltParallelism)
                 .fieldsGrouping("parseSuccess", new Fields("count"))
-                .fieldsGrouping("functor", new Fields("count"));
+                .fieldsGrouping("functor", new Fields("count"))
+                .setNumTasks(boltParallelism * 2);
 
         Config conf = new Config();
         conf.setDebug(true);
 
 
-        conf.setNumWorkers(1);
+        conf.setNumWorkers(numWorkers);
 
         StormSubmitter.submitTopologyWithProgressBar(args[0], conf, builder.createTopology());
     }
