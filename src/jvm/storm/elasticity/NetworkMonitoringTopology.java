@@ -311,6 +311,7 @@ public class NetworkMonitoringTopology {
 
             int existingValue = this.counts.get(count);
             this.counts.put(count, existingValue + 1);
+            _collector.emit(tuple, tuple.getValues());
         }
 
         public void cleanup() {
